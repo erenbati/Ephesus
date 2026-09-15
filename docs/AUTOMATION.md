@@ -40,6 +40,7 @@ ENGINEERING-STANDARDS §2; the hooks above cover the identity half.
 | `/doc-sync` | Audits code↔docs drift (module map, IPC surface, schemas, invariant tripwires) and fixes mechanical drift; escalates behavioral divergence. |
 | `/improve` | Files a governed Gymnasium self-improvement proposal (evidence → single scoped change → success metric → gate). See ADR-0015. |
 | `/research` | Runs one Stoa research cycle: studies ONE Architect-registered source from `docs/stoa/WATCHLIST.md` at a pinned commit and files a provenance-cited brief whose candidates feed `/improve`. See ADR-0017. |
+| `/ephesus-engineer` | The senior-engineer operating protocol that governs all of the above: when the Architect must be consulted through AskUserQuestion (and never in prose), the thirteen invariants a diff is checked against, the A-D evidence tiers, and the eight verification rules this build paid for. Not a task skill - it is the standard the task skills are executed to. |
 
 ### Subagents (`.claude/agents/`)
 | Agent | Purpose |
