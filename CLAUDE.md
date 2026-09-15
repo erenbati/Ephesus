@@ -59,7 +59,9 @@ test output). One work package per PR. Do not create PRs unless asked.
 
 ## Project skills available here
 
-`/goal` (drive the current milestone run: authorship + branch policy +
+`/ephesus-engineer` (**the operating protocol the others are executed to**: when to
+consult the Architect, the invariants, the evidence tiers, honest verification
+reporting) · `/goal` (drive the current milestone run: authorship + branch policy +
 package loop) · `/build-package` (execute next BUILD-PROMPT work package) ·
 `/milestone-review` (verify exit criteria, update PROGRESS) · `/doc-sync`
 (code↔docs drift check) · `/improve` (file a Gymnasium improvement proposal) ·

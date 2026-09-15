@@ -438,7 +438,7 @@ mid-run. That run has not happened, so the row is open — as M7's own exit has
 been since 2026-09-01, for the same reason. The script for it is
 [`docs/EXIT-M8.md`](./docs/EXIT-M8.md).
 
-<!-- landed: M8.0 M8.1 M8.2 M8.3 M8.4 M8.5 M8.6 M8.7a M8.7b M8.8 M8.9 M8.10 M8.11 M8.12 M8.13 M8.14
+<!-- landed: M8.0 M8.1 M8.2 M8.3 M8.4 M8.5 M8.6 M8.7a M8.7b M8.8 M8.9 M8.10 M8.11 M8.12 M8.13 M8.14 M8b M8c
      Checked by scripts/check-readme-current.cjs against docs/PROGRESS.md: every
      package ticked there must be listed here, and listing one is a claim that
      the prose below actually says what it did. The check catches the oversight
@@ -567,6 +567,46 @@ with the reason, because a CLI that could approve a destructive gate would
 delete the meaning of the very clause the exit run is measuring. Every act it
 performs is tagged `remote` in the book of record, so an audit can always tell a
 script from a person at the keyboard.
+
+Then the first real attempt at that run happened, and it is where the rest of
+this milestone came from: **the crew detected everything and could act on
+nothing.** A mission bundle was read from the repository rather than from the
+harness home, so an activated instance had no runbooks to cite and no authority
+to act from — the single highest-value fix in the record, and the direct cause of
+both failing action clauses. Even with the file in place the agent could not open
+it: the playbooks directory sits outside the working directory a hire is spawned
+in, so it now carries a grant minted at spawn — **read-only, deliberately**,
+because an agent that could rewrite its runbook could quietly lower the bar it is
+judged against. Alongside it: a meeting with one attendee can end itself, and the
+floor prompt names the act of declining instead of instructing a turn that
+silently resets the round; an archived brief resolves from the home a reader
+actually has; a shipped prompt no longer instructs an act its endpoint refuses;
+and the ledger's first refusal teaches the rule instead of billing you for the
+same mistake eight times over.
+
+And most recently, **the company is bounded, and honest about itself.** The first
+unattended hour cost 40,453,419 tokens — $11.22 — because two defects compounded:
+no ceiling could be set without a mouse, and the first ingest replayed two weeks
+of settled history as news, raising eight incidents before the runner had broken
+anything. Both are closed, and consent now asks for the ceiling rather than
+assuming one — the verb may only ever *lower* it, because tightening a cap is a
+script's to do and loosening one is a person's. The rest is the harness learning
+to describe itself in the reader's vocabulary instead of its own. `WORKING` must
+cite a row proving an area **finished**, not one proving it was asked: the
+diagnosis called the incidents area working while the ledger had refused eight of
+them. `armed` says which triggers have a clock — a runner following this
+repository's own exit script would have read the old output as *"stop, the run is
+invalid"* and been wrong. A seeded config names the file it actually seeded,
+recall fails fast instead of hanging for ever, and a hire declares in advance what
+it may do without asking, because an engine's own permission prompt during an
+unattended hour is a stop nobody is there to answer. A crew comes back after a
+restart with no manual filesystem step. And the exit script no longer tells the
+crew the break is deliberate — it had been dictating the commit message for the
+very failure the company is measured on finding.
+
+**The unattended hour itself has still never been run to completion.** Every
+package above exists because an attempt died on it. The run is unblocked for the
+first time, and until it happens M8b's exit, M8c's exit and M7b all wait on it.
 
 M7's own exit (SRS §6.1 on a real repository) remains open and is independent
 of M8. The same run is owed to both.

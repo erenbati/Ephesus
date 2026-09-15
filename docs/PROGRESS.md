@@ -6614,6 +6614,246 @@ and in `docs/implementations/2026-09-07-m8-live-verification.md` §3.
   NOT there, with the reason written into the panel's own header. What remains
   open is only whether anything beyond those two dials is owed.
 
+## M8b — The crew can act, and the briefing can be read (plan drafted 2026-09-09)
+
+Derived from IMPLEMENTATION M8b + the numbered findings of
+[the M8 exit run](demo/m8-onehour-aftershock.md). M8 proved the company survives
+being left alone. That run then showed the other half of SRS §6.1 failing in a way
+no unit suite could have predicted: **the crew detected everything and could act on
+nothing.** Every package here closes a finding that run produced, which is why none
+of them was planned before it.
+
+- [x] **M8b.1 Install the profile bundle into the harness home** — Finding 8, the
+      record's own *"single highest-value fix"*, and the direct cause of **both**
+      failing action clauses of SRS §6.1. A profile bundle was read from the
+      **repository**, so an instance activated in a real harness home had no
+      runbooks to cite and no authority to act from.
+      *Evidence: the adversarial pass is the entry here, not the suite. After 27
+      green tests and 15 killed mutants the pass asked the question none of them
+      encoded — can the agent actually OPEN the file the message names? It could
+      not: `<home>/instances/<instance>/playbooks/` sits outside the spawn working
+      directory with no grant at all, the same position `mailboxPermissions`
+      already documents for the mailbox. A `Read`-only grant was added and minted
+      at spawn — deliberately narrower than the mailbox's `Read`+`Edit`, because an
+      agent that could rewrite its runbook could quietly lower the bar it is judged
+      against. Round 2 then planted `playbooksDir: null` and every test stayed
+      GREEN: two correct halves and nothing testing the join. `test/main/agents.test.ts`
+      now spawns through a real `AgentManager` with a real `ClaudeAdapter` and reads
+      the settings file spawn actually writes. Final round: 23 of 23 real mutants
+      killed, both planted no-op controls survived.
+      [Record](implementations/2026-09-09-m8b-1-install-playbooks.md).*
+- [x] **M8b.2 A meeting with one attendee must be able to end** — Finding 11, the
+      direct cause of SRS §6.1 clause 4 failing. The runner convened the meeting
+      `ephctl help` documents and `EXIT-M8.md` §5.4 sends them to, and it could not
+      terminate.
+      *Evidence: a round rule plus routing, 130 tests green and mutants dying — then
+      the adversarial pass asked whether anything TELLS an agent it may decline. It
+      did not: the shipped `prompts/odeon/meeting-floor.md` said to "say that in one
+      line", and saying it is a turn, and a turn resets the round. Artemis declared
+      nothing further at seq 393 and again at seq 427 on 2026-09-09 and the floor came
+      back both times; **the round rule alone would not have ended that meeting.** She
+      reached `refuse` on her third attempt by reasoning about the log, not because
+      anything named the act. The prompt now names it, says what a decline does, and
+      says why a "nothing further" turn is not one — asserted against the SHIPPED file,
+      not a fixture. 11 of 11 real mutants killed, control survived.
+      [Record](implementations/2026-09-09-m8b-2-a-meeting-can-end.md).*
+- [x] **M8b.3 A brief that is archived must exist** — Finding 13, **which is wrong on
+      its central claim, and correcting the record is half the package.** The finding
+      reported at high severity that the run's one brief was archived pointing at a
+      file that was never written. The file was written; the ref could not be resolved
+      from the home a reader actually has.
+      *Evidence: refs now carry their root rather than assuming an agora-relative one.
+      6 of 6 real mutants killed — including P6 (`minutesRef` reverting to an
+      agora-relative ref), which **survived the first round** and was killed only after
+      a test was written for it. P1 reproduces the 2026-09-09 state exactly.
+      [Record](implementations/2026-09-09-m8b-3-refs-resolve.md).*
+- [x] **M8b.4 The Odeon endpoint and the orchestrator agree on their vocabulary** —
+      Finding 12. Artemis's first attempt to end a meeting was rejected outright at
+      seq 439–440 because a shipped prompt instructed an act the endpoint refuses.
+      *Evidence: 5 of 5 real mutants killed and the Q6 control survived, as it must.
+      Q4 is the one that matters — it makes a **shipped prompt** instruct the act that
+      bounced on 2026-09-09; Q5 makes a shipped prompt name an endpoint that does not
+      exist. Both die.
+      [Record](implementations/2026-09-09-m8b-4-odeon-vocabulary.md).*
+- [x] **M8b.5 The ledger's first refusal must teach, or not happen** — Finding 6 as
+      corrected in §4a of that record. Every incident's first task-open was refused,
+      and the refusal did not carry enough for the agent to learn the rule — so it
+      was billed for the same mistake repeatedly.
+      *Evidence: a refusal now reports every issue rather than only the first, carries
+      the validator's own words, and uses the caller's path shape rather than the
+      validator's internal `ops.0`. 8 of 8 real mutants killed; R1 restores the
+      2026-09-09 behaviour and dies, R5 makes a broken proposal answer with an uncapped
+      wall of reasons and dies.
+      [Record](implementations/2026-09-09-m8b-5-ledger-refusal-teaches.md).*
+- [ ] **M8b exit** — `docs/EXIT-M8.md` re-run end to end by a runner who is not the
+      author, from a clean clone. **NOT MET.** A rehearsal was performed on 2026-09-09
+      ([record](demo/m8b-rehearsal-m8b-rehearsal.md)) and produced four findings rather
+      than a pass: **A** (the crew could not be brought back after the §4 restart) and
+      **B** (the exit script dictated a commit message telling the crew the break was
+      deliberate) became M8c.9 and M8c.10; **C** re-confirmed Findings 3 and 4 still
+      live; **D** upgraded Finding 10. A rehearsal that finds defects is the mechanism
+      working — it is not the criterion. **This box and the M8c exit box below are the
+      same run.**
+
+## M8c — Bounded, and honest about itself (plan drafted 2026-09-09 at M8b close)
+
+Derived from IMPLEMENTATION M8c + the remaining findings of
+[the M8 exit run](demo/m8-onehour-aftershock.md) + the four findings of
+[the M8b rehearsal](demo/m8b-rehearsal-m8b-rehearsal.md). M8b gave the crew the
+ability to act. This milestone is about the two things that made the first exit run
+unaffordable and its own report untrustworthy: **nothing bounded the spend, and the
+harness described itself in a vocabulary its reader did not share.** Packages are
+listed in number order; they were built in the order 10, 1, 8, 2, 3, 4, 5, 6, 7, 9,
+3b, which the suite totals in each evidence note record.
+
+- [x] **M8c.1 A ceiling must be reachable without a mouse** — Finding 3, confirmed
+      still live by the M8b rehearsal's Finding C. `EXIT-M8.md` §2 is titled *"Set a
+      ceiling before you walk away"* and calls itself *"the step that is skipped and
+      then regretted"* — and then instructed **WATCH → settings**, which a runner who
+      is not a person at the machine cannot reach. Both runs so far went out
+      unbudgeted for exactly this reason.
+      *Evidence: `ephctl budget:set --daily` writes the same file the panel does. The
+      verb may only ever LOWER the ceiling — raising one is refused by name, with the
+      reason and where to do it instead, because tightening a cap is a script's to do
+      and loosening it is a person's (ADR-0033). Test Files 234 passed · Tests 4500
+      passed, 8 skipped (4508). Mutation round: 10 of 10 real killed, control
+      survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-1-budget-verb.md).*
+- [x] **M8c.2 The first ingest must not replay history as news** — Finding 5.
+      Activation completed at 09:06:36; by ~09:08, **before the runner had broken
+      anything**, the Harbor's first ingest had pulled ten CI runs and the crew had
+      raised eight incidents against two weeks of already-settled history.
+      *Evidence: the first ingest now reads history as history. Test Files 235 passed ·
+      Tests 4524 passed, 8 skipped (4532). Mutation round: 10 of 10 real killed,
+      control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-2-cold-start.md).*
+- [x] **M8c.3 Findings 3 and 5 compound, and that is the lesson** — the cost-control
+      package, and the reason this milestone exists. In the filing's own words:
+      *"No ceiling could be set **and** the cold start replayed two weeks of history.
+      Neither alone is alarming; together they turned 'walk away for an hour' into
+      40,453,419 tokens ($11.22)"* — with the harness projecting 72.3% of the
+      five-hour window consumed.
+      *Evidence: the consent grant now asks for the ceiling rather than assuming one.
+      Test Files 235 passed · Tests 4536 passed, 8 skipped (4544). Mutation round:
+      10 of 10 real killed, control survived, ROUND OK. Three gaps the round surfaced
+      were closed in `9e1aaf8` before the merge.
+      [Record](implementations/2026-09-10-m8c-3-consent-asks-the-ceiling.md).*
+- [x] **M8c.3b One suggested ceiling, and a refusal that reads once** — *not planned;
+      **found by running the M8c rehearsal**, five minutes in, before any agent had
+      been hired.* `EXIT-M8.md` §2 sends the runner to `consent:grant`, and the
+      refusal came back `consent was NOT granted: consent was NOT granted: there is
+      no daily token ceiling…`. Two defects in one line, both introduced that same
+      morning: the prefix was added by both `ControlServer` (`control.ts:535`) and
+      M8c.3's `grant()`, and the suggested figure still read 300,000 after the
+      EXIT-M8 §2 correction had raised it to 5,000,000. **A refusal that stutters is
+      a refusal a reader stops reading — the exact failure mode the "a refusal must
+      teach the rule" standard warns about, introduced by the package that was
+      fixing it.**
+      *Evidence: Test Files 236 passed · Tests 4607 passed, 8 skipped (4615).
+      Mutation round: 7 of 7 real killed, ROUND OK. Merged as PR #57.
+      [Record](implementations/2026-09-10-m8c-3b-one-suggested-ceiling.md).*
+- [x] **M8c.4 `WORKING` must cite a row that proves completion** — Finding 7, and the
+      sharpest form of the defect M8.13 was built to prevent. At 06:12:41Z, with eight
+      ledger refusals already in the log and **zero tasks succeeded**, `DIAGNOSIS.md`
+      reported `incidents | WORKING | profile/incident-raised at seq 85`. Seq 85 is
+      real and was quoted honestly — but `incident-raised` proves only that an incident
+      was raised, not that it was routed, triaged, actioned or even recorded as a task.
+      Five rows later the ledger refused it, and seven siblings after that.
+      *Evidence: an area may now cite only a row that proves completion, not entry.
+      Test Files 235 passed · Tests 4547 passed, 8 skipped (4555). Mutation round:
+      10 of 10 real killed, control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-4-working-cites-completion.md).*
+- [x] **M8c.5 A deduplicated condition must not lose what distinguishes its
+      occurrences** — Finding 2, confirmed still live by the M8b rehearsal's Finding C.
+      `DIAGNOSIS.md` reported `home/seeded-config — authority.json was missing and has
+      been created with the shipped default (×2)`, while `log.jsonl` seq 1 recorded the
+      same cause naming `gate-policy.json`. The dedup key collapsed two different files
+      into one row and kept only one filename, so the reader was told to review a file
+      that was not the one seeded.
+      *Evidence: Test Files 235 passed · Tests 4558 passed, 8 skipped (4566). Mutation
+      round: 6 of 6 real killed, control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-5-seeded-config-names-the-file.md).*
+- [x] **M8c.6 Labels and docs that are true in the reader's vocabulary** — Findings 4
+      and 1, and **Finding 4 caught a second runner at the M8b rehearsal.**
+      `profile:activate` and `profile:instances` both reported `armed` listing only the
+      two sweep triggers and no `ci` trigger — while `EXIT-M8.md` §5.1 says
+      unambiguously that no bound `ci` trigger is a setup defect and *"the run cannot
+      proceed past it"*. **The documented reading of that output was therefore: stop,
+      the run is invalid.** It was bound; `profiles/skeleton-crew/triggers/ci-failure.json`
+      declares it. `armed` meant "has a clock", and only scheduled triggers have one.
+      *Evidence: `armed` now says which, in the reader's vocabulary. Test Files 235
+      passed · Tests 4564 passed, 8 skipped (4572). Mutation round: 8 of 8 real killed,
+      control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-6-armed-says-which.md).*
+- [x] **M8c.7 Recall must fail fast or not accept the call** — Finding 9, in the
+      health-watcher's own words: *"`$EPH_RECALL` is **unavailable, not merely empty**.
+      Two attempts (unscoped, and `--scope knowledge`) produced **zero bytes of output
+      and never terminated**"*. A hang is now a reported condition rather than a
+      silence.
+      *Evidence: Test Files 236 passed · Tests 4588 passed, 8 skipped (4596). Mutation
+      round: 9 of 9 real killed, control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-7-recall-fails-fast.md).*
+- [x] **M8c.8 Decide what an engine-level permission prompt is** — Finding 10,
+      upgraded by the M8b rehearsal's Finding D. The harness records `gate/ungated ·
+      tool-permission · waiting · "Claude is waiting for your input"` whenever an agent
+      meets its engine's own permission prompt — and during an unattended hour there is
+      nobody to answer it, so the agent simply stops. A hire now declares in advance
+      what it may do without asking.
+      *Evidence: Test Files 235 passed · Tests 4508 passed, 8 skipped (4516). Mutation
+      round: **fourteen** real mutants and a planted no-op — 14 of 14 real killed,
+      control survived, ROUND OK.
+      [Record](implementations/2026-09-10-m8c-8-engine-prompts.md).*
+- [x] **M8c.9 A crew must be able to come back after a restart** — the M8b rehearsal's
+      Finding A. After the `EXIT-M8.md` §4 force-kill the instance restored correctly —
+      plan back, trigger clock back, `seq` contiguous, consent not re-asked — and then
+      **the crew could not be brought back by any documented surface.** A restart that
+      restores everything except the workers is a restart that ends the run.
+      *Evidence: the acceptance test runs a **second** harness against the home the
+      first one left and spawns the same agent, which is the shape the defect had.
+      Mutation round with a control: nine real mutants and a planted no-op. The
+      adversarial pass then walked restart → reactivate looking for a second blocker the
+      spawn seam might hide — `installPlaybooks` replaces idempotently, `beforeHires`
+      cannot refuse, `targetExists` still holds, `activate` takes over a `down`
+      instance, triggers re-arm from `armed: []` — and none of them refuses.
+      [Record](implementations/2026-09-10-m8c-9-crew-comes-back.md).*
+- [x] **M8c.10 The exit script must not tell the crew the break is deliberate** — the
+      M8b rehearsal's Finding B. `EXIT-M8.md` §3 dictated the commit message for the
+      deliberate break the entire exit run is built around — so the crew was handed the
+      answer to the question it was being measured on. The planted break now reads like
+      an ordinary change.
+      *Evidence: Test Files 234 passed · Tests 4484 passed, 8 skipped (4492). Mutation
+      round: 9 of 9 real killed, control survived, ROUND OK — the control being
+      `docs/DECISIONS-LOG`, with a case asserting the planted break is caught.
+      [Record](implementations/2026-09-09-m8c-10-exit-break-message.md).*
+- [ ] **M8c exit** — an unattended run of `docs/EXIT-M8.md` completing inside a
+      **stated** ceiling, with: no incident raised for a run older than the activation;
+      `DIAGNOSIS.md` reporting no area as `WORKING` on the strength of an entry row,
+      verified by planting an entered-but-failing pipeline and reading the report; a
+      restarted company bringing its crew back with no manual filesystem step; and the
+      hour ending because **the work ended** rather than because an agent met a prompt.
+      **NOT MET, and never carried to completion.** No run artifact of any kind exists
+      under `docs/demo/`. The repository's only durable trace of an attempt is M8c.3b,
+      which records being found *"five minutes in, before any agent had been hired"*. A
+      later attempt is remembered as aborted seconds into the hour when the machine
+      moved; **that is a recollection with no record in the tree, and is logged here as
+      owed rather than as evidence.**
+      **This box is also the M8b exit above, and M7b sits behind it.** The four packages
+      built to make the run survivable at all — M8c.1 (a ceiling without a mouse),
+      M8c.2 (no history replayed as news), M8c.8 (no unanswerable prompt) and M8c.9
+      (the crew comes back) — are all landed, so the run is unblocked for the first
+      time.
+
+### M8b / M8c record note (2026-09-15)
+
+These two sections were written on 2026-09-15 from the sixteen implementation docs and
+their merge commits on `origin/main` @ `fe8d4a2`, **nine days after the fact**. Between
+2026-09-06 and this entry PROGRESS.md carried no mention of either milestone while
+sixteen packages landed — so a session resuming at "the first unchecked box" would have
+restarted at M6.9 or M7b. Every figure above is quoted from the package's own record;
+**nothing was re-run to produce this entry**, and no box was ticked that its
+implementation doc did not already evidence. See
+[the status snapshot](status/2026-09-15-status.md).
+
 ## M7b — The recursive company + shipping (plan drafted 2026-08-29 at M6 close)
 
 Derived from IMPLEMENTATION M7's inward half + ADR-0018 + ADR-0019 + ADR-0020 +
