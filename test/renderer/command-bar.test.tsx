@@ -26,7 +26,7 @@ afterEach(() => {
 function rig(initial: readonly CommandState[] = []) {
   const offAgents = vi.fn()
   const offCommands = vi.fn()
-  const submit = vi.fn<BarBridge['commands']['submit']>(async (agentId, _text) => ({
+  const submit = vi.fn<BarBridge['commands']['submit']>(async (agentId) => ({
     agentId,
     held: null,
     reason: null
@@ -69,9 +69,7 @@ async function mount(selected: string | null) {
   const onSelect = vi.fn()
   const onAgentSeen = vi.fn()
   await act(async () => {
-    root!.render(
-      <CommandBar selected={selected} onSelect={onSelect} onAgentSeen={onAgentSeen} />
-    )
+    root!.render(<CommandBar selected={selected} onSelect={onSelect} onAgentSeen={onAgentSeen} />)
   })
   return { onSelect, onAgentSeen }
 }
